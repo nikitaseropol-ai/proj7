@@ -10,14 +10,30 @@
     <div class="gallery-container">
         <div class="gallery-wrapper">
             <div class="gallery-track">
-                <img src="https://i.ytimg.com/vi/Ldu2Giqx988/maxresdefault.jpg" alt="Изображение 1">
-                <img src="https://avatars.mds.yandex.net/i?id=f66196262b3b4b9ac52b477c1491a89265d34441-8249766-images-thumbs&n=13" alt="Изображение 2">
-                <img src="https://avatars.mds.yandex.net/i?id=3138593fa5aeceb9ea445a2dd949df34e90573c6-10242421-images-thumbs&n=13" alt="Изображение 3">
-                <img src="https://avatars.mds.yandex.net/i?id=c5a9ba024a9f263a9515bbe471f3adc5_l-5272716-images-thumbs&n=13" alt="Изображение 4">
-                <img src="https://i.ytimg.com/vi/E4sQqYKL9uw/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE8gNSh_MA8=&rs=AOn4CLBTb7up9fE9B7Y1Drv5YlFbkJTxUw" alt="Изображение 5">
-                <img src="https://avatars.mds.yandex.net/i?id=f405ff229f21b20212144ab6b43bc270_l-10906089-images-thumbs&n=13" alt="Изображение 6">
-                <img src="https://i.ytimg.com/vi/pE3cmM3Yn0s/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgRShFMA8=&rs=AOn4CLBA_iUJ5FvYoxQGhvF82oavqwkQFg" alt="Изображение 7">
-                <img src="https://i.ytimg.com/vi/cF4pEP-51yc/maxresdefault.jpg" alt="Изображение 8">
+                <div class="slide">
+                    <img src="https://i.ytimg.com/vi/Ldu2Giqx988/maxresdefault.jpg" alt="Изображение 1">
+                </div>
+                <div class="slide">
+                    <img src="https://avatars.mds.yandex.net/i?id=f66196262b3b4b9ac52b477c1491a89265d34441-8249766-images-thumbs&n=13" alt="Изображение 2">
+                </div>
+                <div class="slide">
+                    <img src="https://avatars.mds.yandex.net/i?id=3138593fa5aeceb9ea445a2dd949df34e90573c6-10242421-images-thumbs&n=13" alt="Изображение 3">
+                </div>
+                <div class="slide">
+                    <img src="https://avatars.mds.yandex.net/i?id=c5a9ba024a9f263a9515bbe471f3adc5_l-5272716-images-thumbs&n=13" alt="Изображение 4">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ytimg.com/vi/E4sQqYKL9uw/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE8gNSh_MA8=&rs=AOn4CLBTb7up9fE9B7Y1Drv5YlFbkJTxUw" alt="Изображение 5">
+                </div>
+                <div class="slide">
+                    <img src="https://avatars.mds.yandex.net/i?id=f405ff229f21b20212144ab6b43bc270_l-10906089-images-thumbs&n=13" alt="Изображение 6">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ytimg.com/vi/pE3cmM3Yn0s/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgRShFMA8=&rs=AOn4CLBA_iUJ5FvYoxQGhvF82oavqwkQFg" alt="Изображение 7">
+                </div>
+                <div class="slide">
+                    <img src="https://i.ytimg.com/vi/cF4pEP-51yc/maxresdefault.jpg" alt="Изображение 8">
+                </div>
             </div>
         </div>
         
@@ -33,14 +49,14 @@
         </button>
 
         <div class="pager">
-            <span class="current-page">1</span> / <span class="total-pages">3</span>
+            <span class="current-page">1</span> / <span class="total-pages">6</span>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const track = document.querySelector('.gallery-track');
-            const images = document.querySelectorAll('.gallery-track img');
+            const slides = document.querySelectorAll('.slide');
             const prevBtn = document.querySelector('.prev-btn');
             const nextBtn = document.querySelector('.next-btn');
             const currentPageEl = document.querySelector('.current-page');
@@ -48,17 +64,37 @@
             
             let currentIndex = 0;
             let itemsPerView;
+            let totalPages;
 
             function updateItemsPerView() {
-                itemsPerView = window.innerWidth <= 768 ? 1 : 3;
-                totalPagesEl.textContent = Math.ceil(images.length / itemsPerView);
+                // На мобильных показываем по 1 изображению
+                if (window.innerWidth <= 768) {
+                    itemsPerView = 1;
+                    totalPages = slides.length; // 8 страниц на мобильных
+                } else {
+                    itemsPerView = 3;
+                    totalPages = slides.length - itemsPerView + 1; // 6 страниц на десктопе
+                }
+                
+                totalPagesEl.textContent = totalPages;
                 updateSlider();
             }
 
             function updateSlider() {
                 const slideWidth = 100 / itemsPerView;
-                track.style.transform = `translateX(-${currentIndex * slideWidth}%)`;
+                
+                // Для десктопа сдвигаем на ширину одного слайда
+                // Для мобильных сдвигаем на ширину всего слайда (100%)
+                const translateX = window.innerWidth <= 768 ? 
+                    currentIndex * 100 : 
+                    currentIndex * slideWidth;
+                
+                track.style.transform = `translateX(-${translateX}%)`;
                 currentPageEl.textContent = currentIndex + 1;
+                
+                // Обновляем состояние кнопок
+                prevBtn.disabled = currentIndex === 0;
+                nextBtn.disabled = currentIndex >= totalPages - 1;
             }
 
             prevBtn.addEventListener('click', () => {
@@ -69,7 +105,7 @@
             });
 
             nextBtn.addEventListener('click', () => {
-                if (currentIndex < Math.ceil(images.length / itemsPerView) - 1) {
+                if (currentIndex < totalPages - 1) {
                     currentIndex++;
                     updateSlider();
                 }
